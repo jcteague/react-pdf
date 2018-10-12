@@ -139,7 +139,6 @@ class Document {
 
   async renderPages() {
     const subpages = this.wrapPages();
-
     for (let j = 0; j < subpages.length; j++) {
       // Update dynamic text nodes with total pages info
       subpages[j].renderDynamicNodes(

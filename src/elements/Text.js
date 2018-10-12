@@ -106,10 +106,8 @@ class Text extends Base {
       if (counter + line.height > height) {
         return i;
       }
-
       counter += line.height;
     }
-
     return this.lines.length;
   }
 

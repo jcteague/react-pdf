@@ -17,8 +17,10 @@ const fileExists = (file, srcpath = __dirname) =>
   fs.existsSync(path.join(__dirname, file));
 
 const runExample = name => {
+  const testFile = `./${name}/index`;
   try {
-    require(`./${name}/index`);
+    console.log(`running ${testFile}`);
+    require(testFile);
   } catch (e) {
     console.error(e);
   }

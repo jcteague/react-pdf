@@ -12,6 +12,7 @@ const Link = 'LINK';
 const Page = 'PAGE';
 const Note = 'NOTE';
 const Image = 'IMAGE';
+const Svg = 'SVG';
 const Document = 'DOCUMENT';
 
 const pdf = input => {
@@ -106,6 +107,7 @@ export {
   Font,
   Note,
   Image,
+  Svg,
   Document,
   StyleSheet,
   createInstance,
