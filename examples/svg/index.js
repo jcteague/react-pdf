@@ -43,6 +43,9 @@ const doc = (
       <View style={{ flexDirection: 'column' }}>
         <Text>Hello Dave. Here is some text before the svg</Text>
         <Text>This is another line of text</Text>
+        {/* when adding a svg using svg-to-pdf, the height and width was not set from the svg
+            the workaround is to wrap the svg with a View component and set height and width there
+        */}
         <View style={{ width: 100, height: 100 }}>
           <Svg content={svgContent} debug style={styles.svg} />
         </View>
