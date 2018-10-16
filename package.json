@@ -17,7 +17,7 @@
     "example": "babel-node ./examples/index.js",
     "prepublish": "npm run build",
     "precommit": "git add . && lint-staged",
-    "postinstall": "npm run build",
+    "postinstall": "npx rimraf ./dist && npx rollup -c",
     "lint": "eslint performance src",
     "test": "jest",
     "test:size": "bundlesize"
