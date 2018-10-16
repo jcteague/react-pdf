@@ -1,6 +1,6 @@
 {
-  "name": "@react-pdf/renderer",
-  "version": "1.0.0-alpha.18",
+  "name": "@homeaway/react-pdf",
+  "version": "1.1.0-alpha",
   "license": "MIT",
   "author": "Diego Muracciole <diegomuracciole@gmail.com>",
   "homepage": "https://github.com/diegomura/react-pdf#readme",
@@ -17,7 +17,6 @@
     "example": "babel-node ./examples/index.js",
     "prepublish": "npm run build",
     "precommit": "git add . && lint-staged",
-    "postinstall": "npx rimraf ./dist && npx rollup -c",
     "lint": "eslint performance src",
     "test": "jest",
     "test:size": "bundlesize"
