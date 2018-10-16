@@ -1,6 +1,6 @@
 {
-  "name": "@homeaway/react-pdf",
-  "version": "1.1.0-alpha",
+  "name": "@react-pdf/renderer",
+  "version": "1.0.0-alpha.18",
   "license": "MIT",
   "author": "Diego Muracciole <diegomuracciole@gmail.com>",
   "homepage": "https://github.com/diegomura/react-pdf#readme",
@@ -52,8 +52,6 @@
     "page-wrapping": "^1.0.2",
     "react": "^16.4.1",
     "react-reconciler": "^0.12.0",
-    "svg-to-pdfkit": "^0.1.7",
-    "svgson-next": "^4.1.6",
     "yoga-layout": "1.9.3"
   },
   "devDependencies": {
