@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { PureComponent } from 'react';
+import React from 'react';
 import warning from 'fbjs/lib/warning';
 import { flatStyles } from './utils/styles';
 import {
@@ -18,16 +18,8 @@ import {
   Document as PDFDocument,
 } from './index';
 
-export const Document = ({ insideViewer, children, ...props }) => {
-  const doc = <PDFDocument {...props}>{children}</PDFDocument>;
-
-  // TODO: Add documentation link to warning message
-  warning(
-    insideViewer,
-    'Please move <Document> inside a PDFViewer or passed to PDFDownloadLink or BlobProvider. Document as root will be deprecated in future versions',
-  );
-
-  return insideViewer ? doc : <PDFViewer {...props}>{doc}</PDFViewer>;
+export const Document = ({ children, ...props }) => {
+  return <PDFDocument {...props}>{children}</PDFDocument>;
 };
 
 class InternalBlobProvider extends React.PureComponent {
@@ -80,18 +72,12 @@ export const BlobProvider = ({ document: doc, children }) => {
     return null;
   }
 
-  const element = React.cloneElement(doc, { insideViewer: true });
-
-  return (
-    <InternalBlobProvider document={element}>{children}</InternalBlobProvider>
-  );
+  return <InternalBlobProvider document={doc}>{children}</InternalBlobProvider>;
 };
 
 export const PDFViewer = ({ className, style, children }) => {
-  const doc = React.cloneElement(children, { insideViewer: true });
-
   return (
-    <InternalBlobProvider document={doc}>
+    <InternalBlobProvider document={children}>
       {({ url }) => (
         <iframe
           className={className}
@@ -107,23 +93,28 @@ export const PDFDownloadLink = ({
   document: doc,
   className,
   style,
-  fileName,
   children,
+  fileName = 'document.pdf',
 }) => {
   if (!doc) {
     warning(false, 'You should pass a valid document to PDFDownloadLink');
     return null;
   }
 
-  const element = React.cloneElement(doc, { insideViewer: true });
+  const downloadOnIE = blob => () => {
+    if (window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blob, fileName);
+    }
+  };
 
   return (
-    <InternalBlobProvider document={element}>
+    <InternalBlobProvider document={doc}>
       {params => (
         <a
           className={className}
           download={fileName}
           href={params.url}
+          onClick={downloadOnIE(params.blob)}
           style={Array.isArray(style) ? flatStyles(style) : style}
         >
           {typeof children === 'function' ? children(params) : children}

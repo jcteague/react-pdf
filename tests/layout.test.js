@@ -7,6 +7,7 @@ import root from './utils/dummyRoot';
 
 let dummyRoot;
 const ViewElement = 'VIEW';
+const ImageElement = 'IMAGE';
 const testImage = 'https://react-pdf.org/static/images/quijote1.jpg';
 
 // Only for testing purposes
@@ -28,7 +29,7 @@ describe('Layout', () => {
 
   test('Absolute elements should be placed with top fixed', async () => {
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, {});
+    const page = new Page(dummyRoot, { wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', top: 10 },
     });
@@ -43,7 +44,7 @@ describe('Layout', () => {
 
   test('Absolute elements should be placed with left fixed', async () => {
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, {});
+    const page = new Page(dummyRoot, { wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', left: 10 },
     });
@@ -58,7 +59,7 @@ describe('Layout', () => {
 
   test('Absolute elements should be placed with right fixed', async () => {
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, {});
+    const page = new Page(dummyRoot, { wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', right: 10 },
     });
@@ -73,7 +74,7 @@ describe('Layout', () => {
 
   test('Absolute elements should be placed with bottom fixed', async () => {
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, {});
+    const page = new Page(dummyRoot, { wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', bottom: 10 },
     });
@@ -96,7 +97,7 @@ describe('Layout', () => {
       left: 40,
     };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { size: size });
+    const page = new Page(dummyRoot, { size: size, wrap: false });
     const view = new View(dummyRoot, { style: style });
 
     doc.appendChild(page);
@@ -113,7 +114,7 @@ describe('Layout', () => {
   test('Absolute elements should be placed with percent top', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { size });
+    const page = new Page(dummyRoot, { size, wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', top: '10%' },
     });
@@ -129,7 +130,7 @@ describe('Layout', () => {
   test('Absolute elements should be placed with percent left', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, { size });
-    const page = new Page(dummyRoot, {});
+    const page = new Page(dummyRoot, { wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', left: '10%' },
     });
@@ -145,7 +146,7 @@ describe('Layout', () => {
   test('Absolute elements should be placed with percent right', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { size });
+    const page = new Page(dummyRoot, { size, wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', right: '10%' },
     });
@@ -161,7 +162,7 @@ describe('Layout', () => {
   test('Absolute elements should be placed with percent bottom', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { size });
+    const page = new Page(dummyRoot, { size, wrap: false });
     const view = new View(dummyRoot, {
       style: { position: 'absolute', bottom: '10%' },
     });
@@ -184,7 +185,7 @@ describe('Layout', () => {
       left: '40%',
     };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { size: size });
+    const page = new Page(dummyRoot, { size: size, wrap: false });
     const view = new View(dummyRoot, { style: style });
 
     doc.appendChild(page);
@@ -203,7 +204,7 @@ describe('Layout', () => {
   test('Should wrap single big view on non padding page', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { style: { height: 1200 } });
 
     doc.appendChild(page);
@@ -221,7 +222,6 @@ describe('Layout', () => {
     const doc = new Document(dummyRoot, {});
     const view = new View(dummyRoot, { style: { height: 1200 } });
     const page = new Page(dummyRoot, {
-      wrap: true,
       size,
       style: { paddingTop: 10, paddingBottom: 20 },
     });
@@ -239,7 +239,7 @@ describe('Layout', () => {
   test('Should wrap nested big view on non padding page', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { style: { height: 1200, padding: 20 } });
     const child = new View(dummyRoot, { style: { height: 800 } });
 
@@ -262,7 +262,6 @@ describe('Layout', () => {
     const view = new View(dummyRoot, { style: { height: 1200, padding: 20 } });
     const child = new View(dummyRoot, { style: { height: 800 } });
     const page = new Page(dummyRoot, {
-      wrap: true,
       size,
       style: { paddingTop: 10, paddingBottom: 20 },
     });
@@ -284,7 +283,6 @@ describe('Layout', () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
     const page = new Page(dummyRoot, {
-      wrap: true,
       size,
       style: { flexDirection: 'row' },
     });
@@ -311,7 +309,7 @@ describe('Layout', () => {
   test('Should not wrap if flag false', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const child1 = new View(dummyRoot, { style: { height: 600 } });
     const child2 = new View(dummyRoot, { style: { height: 400 }, wrap: false });
 
@@ -331,7 +329,7 @@ describe('Layout', () => {
   test('Should break if flag true', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const child1 = new View(dummyRoot, { style: { height: 600 } });
     const child2 = new View(dummyRoot, { style: { height: 400 }, break: true });
 
@@ -351,7 +349,7 @@ describe('Layout', () => {
   test('Images should not wrap', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { style: { height: 700 } });
     const image = new Image(dummyRoot, {
       style: { height: 300 },
@@ -374,7 +372,7 @@ describe('Layout', () => {
   test('Should not break if enough presence ahead', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const child1 = new View(dummyRoot, {
       style: { height: 500 },
       minPresenceAhead: 100,
@@ -396,7 +394,7 @@ describe('Layout', () => {
   test('Should break if not enough presence ahead', async () => {
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const child1 = new View(dummyRoot, { style: { height: 500 } });
     const child2 = new View(dummyRoot, {
       style: { height: 500 },
@@ -423,7 +421,7 @@ describe('Layout', () => {
 
   test('Fixed elements should repeat througout pages', async () => {
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true });
+    const page = new Page(dummyRoot, {});
     const view = new View(dummyRoot, { style: { height: 1200 } });
     const fixed = new View(dummyRoot, {
       style: { positon: 'absolute', top: 20 },
@@ -445,7 +443,7 @@ describe('Layout', () => {
     const render = () => <ViewElement style={{ width: '100%', height: 400 }} />;
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { render });
 
     doc.appendChild(page);
@@ -459,6 +457,25 @@ describe('Layout', () => {
     expect(subpages[0].children[0].height).toBe(400);
   });
 
+  test('Should render dynamic images without conditions', async () => {
+    const render = () => <ImageElement src={testImage} />;
+    const size = { width: 600, height: 800 };
+    const doc = new Document(dummyRoot, {});
+    const page = new Page(dummyRoot, { size });
+    const view = new View(dummyRoot, { render });
+
+    doc.appendChild(page);
+    page.appendChild(view);
+
+    const subpages = await renderDocument(doc);
+
+    expect(subpages).toHaveLength(1);
+    expect(subpages[0].children).toHaveLength(1);
+    expect(subpages[0].children[0].children).toHaveLength(1);
+    expect(subpages[0].children[0].children[0].name).toBe('Image');
+    expect(subpages[0].children[0].children[0].props.src).toBe(testImage);
+  });
+
   test('Should render multipe dynamic content without conditions using Fragment', async () => {
     const render = () => (
       <Fragment>
@@ -468,7 +485,7 @@ describe('Layout', () => {
     );
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { render });
 
     doc.appendChild(page);
@@ -491,7 +508,7 @@ describe('Layout', () => {
       );
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { render });
 
     doc.appendChild(page);
@@ -512,7 +529,7 @@ describe('Layout', () => {
       );
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const child1 = new View(dummyRoot, { render, fixed: true });
     const child2 = new View(dummyRoot, {
       style: { width: '100%', height: 1000 },
@@ -538,7 +555,7 @@ describe('Layout', () => {
       );
     const size = { width: 600, height: 800 };
     const doc = new Document(dummyRoot, {});
-    const page = new Page(dummyRoot, { wrap: true, size });
+    const page = new Page(dummyRoot, { size });
     const view = new View(dummyRoot, { render });
 
     doc.appendChild(page);
