@@ -17,6 +17,7 @@
     "example": "babel-node ./examples/index.js",
     "prepublish": "npm run build",
     "precommit": "git add . && lint-staged",
+    "postinstall": "npx rimraf ./dist && npx rollup -c",
     "lint": "eslint performance src",
     "test": "jest",
     "test:size": "bundlesize"
@@ -51,9 +52,13 @@
     "page-wrapping": "^1.1.0",
     "react": "^16.4.1",
     "react-reconciler": "^0.12.0",
+<<<<<<< HEAD
     "svg-to-pdfkit": "^0.1.7",
     "svgson-next": "^4.1.6",
+    "yoga-layout": "1.9.3"
+=======
     "yoga-layout-prebuilt": "1.9.3"
+>>>>>>> upstream/master
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",

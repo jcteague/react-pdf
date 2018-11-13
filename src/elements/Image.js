@@ -1,7 +1,7 @@
-import Yoga from 'yoga-layout';
+import Yoga from 'yoga-layout-prebuilt';
 import warning from 'fbjs/lib/warning';
 import Base from './Base';
-import { fetchImage } from '../utils/image';
+import { resolveImage } from '../utils/image';
 
 const SAFETY_HEIGHT = 10;
 
@@ -11,6 +11,7 @@ const SAFETY_HEIGHT = 10;
 class Image extends Base {
   static defaultProps = {
     wrap: false,
+    cache: true,
   };
 
   constructor(root, props) {
@@ -86,10 +87,8 @@ class Image extends Base {
   }
 
   async fetch() {
-    if (this.image) return;
-
     try {
-      this.image = await fetchImage(this.props.src);
+      this.image = await resolveImage(this.props.src, this.props.cache);
     } catch (e) {
       this.image = { width: 0, height: 0 };
       console.warn(e.message);
@@ -100,6 +99,10 @@ class Image extends Base {
     const clone = super.clone();
     clone.image = this.image;
     return clone;
+  }
+
+  async onAppendDynamically() {
+    await this.fetch();
   }
 
   async render() {

@@ -1,10 +1,12 @@
-import Yoga from 'yoga-layout';
+import Yoga from 'yoga-layout-prebuilt';
 import createPDFRenderer from '@textkit/pdf-renderer';
 import Base from './Base';
-import { Rect, Path, Container } from '../layout';
+import Font from '../font';
 import { getURL } from '../utils/url';
+import { LayoutEngine, Rect, Path, Container } from '../layout';
 import { getAttributedString } from '../utils/attributedString';
 
+const INFINITY = 999999;
 const PDFRenderer = createPDFRenderer({ Rect });
 
 class Text extends Base {
@@ -22,6 +24,7 @@ class Text extends Base {
     this.computed = false;
     this._container = null;
     this._attributedString = null;
+    this._layoutEngine = null;
     this.renderCallback = props.render;
     this.layout.setMeasureFunc(this.measureText.bind(this));
   }
@@ -76,6 +79,23 @@ class Text extends Base {
     return Math.max(...this.lines.map(line => line.advanceWidth));
   }
 
+  get layoutEngine() {
+    if (!this._layoutEngine) {
+      const { hyphenationPenalty } = this.props;
+      const hyphenationCallback = Font.getHyphenationCallback();
+      this._layoutEngine = new LayoutEngine({
+        hyphenationCallback,
+        hyphenationPenalty,
+      });
+    }
+
+    return this._layoutEngine;
+  }
+
+  set layoutEngine(instance) {
+    this._layoutEngine = instance;
+  }
+
   appendChild(child) {
     if (child) {
       child.parent = this;
@@ -123,26 +143,34 @@ class Text extends Base {
   }
 
   layoutText(width, height) {
-    const path = new Path().rect(0, 0, width, height);
-    const container = new Container(path);
+    // IF height null or NaN, we take some liberty on layout height
+    height = height || INFINITY;
 
-    // Do the actual text layout
-    this.root.layoutEngine.layout(this.attributedString, [container]);
+    // Text layout is expensive. That's why we ensure to only do it once
+    // (except dynamic nodes. Those change content and needs to relayout every time)
+    if (!this._container || this.props.render) {
+      const path = new Path().rect(0, 0, width, height);
+      const container = new Container(path);
+      const attributedString = this.attributedString;
+
+      // Do the actual text layout
+      this.layoutEngine.layout(attributedString, [container]);
+      this._container = container;
+    }
 
     // Get the total amount of rendered lines
-    const linesCount = container.blocks.reduce(
+    const linesCount = this._container.blocks.reduce(
       (acc, block) => acc + block.lines.length,
       0,
     );
 
     this.computed = true;
-    this._container = container;
     this.end = linesCount + 1;
   }
 
   measureText(width, widthMode, height, heightMode) {
     if (widthMode === Yoga.MEASURE_MODE_EXACTLY) {
-      this.layoutText(width, 999999);
+      this.layoutText(width);
 
       return { height: this.style.flexGrow ? NaN : this.linesHeight };
     }
@@ -211,6 +239,7 @@ class Text extends Base {
 
     clone.marginTop = 0;
     clone.paddingTop = 0;
+    clone.start = slicedLineIndex;
     clone.attributedString = this.attributedString.slice(
       slicedLine ? slicedLine.stringEnd : 0,
       this.attributedString.length,
@@ -220,6 +249,19 @@ class Text extends Base {
     this.marginBottom = 0;
     this.paddingBottom = 0;
     this.end = slicedLineIndex;
+  }
+
+  clone() {
+    const text = super.clone();
+
+    text.layoutEngine = this.layoutEngine;
+
+    // Save calculated layout for non-dynamic clone elements
+    if (!this.props.render && !this.props.fixed) {
+      text._container = this._container;
+    }
+
+    return text;
   }
 
   async render() {
@@ -235,10 +277,6 @@ class Text extends Base {
         this.width - this.padding.left - this.padding.right,
         this.height - this.padding.top - this.padding.bottom,
       );
-    }
-
-    if (this.props.debug) {
-      this.debug();
     }
 
     const padding = this.padding;
@@ -257,6 +295,10 @@ class Text extends Base {
     });
 
     renderer.render(this.container);
+
+    if (this.props.debug) {
+      this.debug();
+    }
 
     this.root.instance.restore();
   }
